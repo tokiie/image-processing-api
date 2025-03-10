@@ -45,7 +45,9 @@ export function setupErrorHandling(app: express.Application): void {
       return next(err);
     }
 
+    res.setHeader('Content-Type', 'application/json');
     res.status(500).json({
+      success: false,
       error: err.message || 'Internal Server Error',
       status: 500
     });

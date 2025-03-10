@@ -1,24 +1,18 @@
 import { Request, Response } from 'express';
+import { ImageProcessingService } from '../services/ImageProcessingService';
 import { QueueServiceWrapper } from '../services/QueueService';
 import ImageJobModel from '../models/ImageJob';
-import { ImageJobType, JobStatus } from '../types';
+import { JobStatus, ImageJobType, ImageProcessingJobData, PaginationOptions, PaginatedResponse } from '../types';
 import mongoose from 'mongoose';
 import { logger } from '../config/logger';
-import { ImageProcessingService } from '../services/ImageProcessingService';
 
-
-export interface ImageProcessingJobData {
-  jobId: string;
-  imagePath: string;
-  userId: string;
-  options: Record<string, any>;
-  jobType: ImageJobType;
-}
 export class ImageProcessingController {
   private queueServiceInstance: QueueServiceWrapper;
+  private imageProcessingService: ImageProcessingService;
 
   constructor(queueService: QueueServiceWrapper) {
     this.queueServiceInstance = queueService;
+    this.imageProcessingService = new ImageProcessingService();
     this.createJob = this.createJob.bind(this);
     this.getJobStatus = this.getJobStatus.bind(this);
     this.getUserJobs = this.getUserJobs.bind(this);
@@ -64,8 +58,7 @@ export class ImageProcessingController {
     }
 
     // Check if image is valid
-    const imageProcessingService = new ImageProcessingService();
-    const isValid = await imageProcessingService.isValidImage(req.file.path, ImageJobType.THUMBNAIL);
+    const isValid = await this.imageProcessingService.isValidImage(req.file.path, ImageJobType.THUMBNAIL);
     if (!isValid) {
       return { error: 'Invalid image' };
     }

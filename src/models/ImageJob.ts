@@ -1,9 +1,5 @@
-import mongoose, { Document, Schema, Types } from 'mongoose';
-import { ImageJob, JobStatus, ImageJobType } from '../types';
-
-export interface ImageJobDocument extends Document, ImageJob {
-  _id: Types.ObjectId;
-}
+import mongoose, { Schema } from 'mongoose';
+import { JobStatus, ImageJobType, ImageJobDocument } from '../types';
 
 
 const ImageJobSchema = new Schema(

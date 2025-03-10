@@ -84,7 +84,14 @@ export class QueueServiceWrapper {
       this.validateInitialization();
 
       const queue = this.getQueue(queueName);
-      const job = await queue.add(jobName, data, opts);
+      const job = await queue.add(jobName, data, {
+        attempts: 3,
+        backoff: {
+          type: 'fixed',
+          delay: 3000
+        },
+        ...opts
+      });
       logger.info('Job added successfully', { queueName, jobName, jobId: job.id });
       return job;
     } catch (error) {
@@ -117,11 +124,23 @@ export class QueueServiceWrapper {
       ]);
 
       let status = 'unknown';
-      if (isFailed) status = 'failed';
-      else if (isCompleted) status = 'completed';
-      else if (isActive) status = 'active';
-      else if (isDelayed) status = 'delayed';
-      else if (isWaiting) status = 'waiting';
+      switch (true) {
+        case isFailed:
+          status = 'failed';
+          break;
+        case isCompleted:
+          status = 'completed';
+          break;
+        case isActive:
+          status = 'active';
+          break;
+        case isDelayed:
+          status = 'delayed';
+          break;
+        case isWaiting:
+          status = 'waiting';
+          break;
+      }
 
       logger.info('Job status retrieved', { queueName, jobId, status });
       return status;

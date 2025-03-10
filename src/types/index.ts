@@ -1,3 +1,4 @@
+// Job Status and Types
 export enum JobStatus {
     PROCESSING = 'processing',
     COMPLETED = 'completed',
@@ -11,6 +12,7 @@ export enum ImageJobType {
     // WATERMARK = 'watermark',
 }
 
+// Image Processing Types
 export interface ImageJobOptions {
     width?: number;
     height?: number;
@@ -18,6 +20,15 @@ export interface ImageJobOptions {
     format?: string;
 }
 
+export interface ImageProcessingJobData {
+    jobId: string;
+    imagePath: string;
+    userId: string;
+    options: ImageJobOptions;
+    jobType: ImageJobType;
+}
+
+// Database Types
 export interface ImageJob {
     userId: string;
     originalImagePath: string;
@@ -30,4 +41,44 @@ export interface ImageJob {
     createdAt?: Date;
     updatedAt?: Date;
     originalFilename?: string;
-  }
+}
+
+export interface ImageJobDocument extends Document, ImageJob {}
+
+// Queue Types
+export interface QueueJobOptions {
+    attempts?: number;
+    backoff?: {
+        type: 'exponential' | 'fixed';
+        delay: number;
+    };
+    removeOnComplete?: boolean | number;
+    removeOnFail?: boolean | number;
+    delay?: number;
+    jobId?: string;
+    priority?: number;
+}
+
+// File Types
+export interface FileUploadOptions {
+    maxSize?: number;
+    allowedMimeTypes?: string[];
+    supportedFormats?: string[];
+}
+// Pagination Types
+export interface PaginationOptions {
+    page?: number;
+    limit?: number;
+    sort?: string;
+    order?: 'asc' | 'desc';
+}
+
+export interface PaginatedResponse<T> {
+    data: T[];
+    pagination: {
+        page: number;
+        limit: number;
+        total: number;
+        pages: number;
+    };
+}

@@ -28,6 +28,48 @@ export interface ImageProcessingJobData {
     jobType: ImageJobType;
 }
 
+export class ImageProcessingParams {
+    constructor(
+        public readonly inputPath: string,
+        public readonly outputPath: string,
+        public readonly jobType: ImageJobType,
+        public readonly options: ImageJobOptions
+    ) {
+        // Validate required parameters
+        if (!inputPath) throw new Error('Input path is required');
+        if (!outputPath) throw new Error('Output path is required');
+        if (!jobType) throw new Error('Job type is required');
+
+        // Set default options if not provided
+        this.options = {
+            width: options?.width || parseInt(process.env.THUMBNAIL_WIDTH || '100'),
+            height: options?.height || parseInt(process.env.THUMBNAIL_HEIGHT || '100'),
+            quality: options?.quality || 80,
+            format: options?.format || 'jpeg',
+            ...options
+        };
+    }
+
+    // Helper methods
+    getOutputDirectory(): string {
+        return require('path').dirname(this.outputPath);
+    }
+
+    getOutputFilename(): string {
+        return require('path').basename(this.outputPath);
+    }
+
+    // Factory methods
+    static createThumbnail(inputPath: string, outputPath: string, options?: Partial<ImageJobOptions>): ImageProcessingParams {
+        return new ImageProcessingParams(
+            inputPath,
+            outputPath,
+            ImageJobType.THUMBNAIL,
+            options || {}
+        );
+    }
+}
+
 // Database Types
 export interface ImageJob {
     userId: string;

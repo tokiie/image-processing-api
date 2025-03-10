@@ -7,7 +7,7 @@ import path from 'path';
 import fs from 'fs';
 import { env } from '../config/env.config';
 import { logger } from '../config/logger';
-import { ImageProcessingJobData } from '../controllers/imageProcessingController';
+import { ImageProcessingJobData, ImageProcessingParams } from '../types';
 
 /**
  * Creates and configures a BullMQ worker for image processing
@@ -162,18 +162,19 @@ async function processImage(
   tempDir: string,
   imageJobData: ImageProcessingJobData
 ): Promise<string> {
-  const { jobId, imagePath, jobType, options } = imageJobData
+  const { jobId, imagePath, options } = imageJobData;
   const outputFileName = `${jobId}_thumbnail${path.extname(imagePath)}`;
   const outputPath = path.join(tempDir, outputFileName);
 
-  await imageService.processImage(
+  // Create processing params using the factory method
+  const processingParams = ImageProcessingParams.createThumbnail(
     imagePath,
     outputPath,
-    jobType,
     options
   );
 
-  return outputPath;
+  // Process the image with the params object
+  return await imageService.processImage(processingParams);
 }
 
 /**

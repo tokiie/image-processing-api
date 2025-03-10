@@ -1,37 +1,38 @@
 import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
-import { ImageJobOptions, ImageJobType } from '../types';
+import { ImageJobOptions, ImageJobType, ImageProcessingParams } from '../types';
 import { logger } from '../config/logger';
 
 export class ImageProcessingService {
-  async processImage(
-    inputPath: string,
-    outputPath: string,
-    jobType: ImageJobType,
-    options: ImageJobOptions
-  ): Promise<string> {
-    const outputDir = path.dirname(outputPath);
+  async processImage(params: ImageProcessingParams): Promise<string> {
+    const outputDir = params.getOutputDirectory();
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
     }
-//
-    let pipeline = sharp(inputPath);
 
-    if (jobType === ImageJobType.THUMBNAIL) {
+    let pipeline = sharp(params.inputPath);
+
+    if (params.jobType === ImageJobType.THUMBNAIL) {
       pipeline = pipeline.resize({
-        width: options.width || parseInt(process.env.THUMBNAIL_WIDTH || '100'),
-        height: options.height || parseInt(process.env.THUMBNAIL_HEIGHT || '100'),
+        width: params.options.width,
+        height: params.options.height,
         fit: 'cover',
         position: 'center'
       });
+
+      // Apply quality if specified
+      if (params.options.quality) {
+        pipeline = pipeline.jpeg({ quality: params.options.quality });
+      }
     } else {
-      throw new Error(`Unsupported job type: ${jobType}`);
+      throw new Error(`Unsupported job type: ${params.jobType}`);
     }
 
-    await pipeline.toFile(outputPath);
+    await pipeline.toFile(params.outputPath);
+    logger.info(`Image processed successfully: ${params.outputPath}`);
 
-    return outputPath;
+    return params.outputPath;
   }
 
   // Check if the image is valid

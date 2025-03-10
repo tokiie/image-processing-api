@@ -2,6 +2,16 @@
 
 A proof of concept for an asynchronous image processing API built with Node.js, Express, and TypeScript.
 
+The API supports thumbnail creation for the following image formats:
+- JPEG/JPG
+- PNG
+- GIF
+- WebP
+- BMP
+- TIFF
+
+Additional formats may work since the API uses the Sharp image processing library, but support for other formats is not officially guaranteed.
+
 ## Features
 
 - Asynchronous image processing using BullMQ

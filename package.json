@@ -1,0 +1,51 @@
+{
+  "name": "image-processing-api",
+  "version": "1.0.0",
+  "description": "Thumbnail api",
+  "main": "server.ts",
+  "scripts": {
+    "start": "node dist/server.js",
+    "dev": "nodemon --watch src --exec ts-node src/server.ts",
+    "build": "tsc",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tokiie/image-processing-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tokiie/image-processing-api/issues"
+  },
+  "homepage": "https://github.com/tokiie/image-processing-api#readme",
+  "dependencies": {
+    "@types/winston": "^2.4.4",
+    "bullmq": "^5.41.7",
+    "dotenv": "^16.4.7",
+    "envalid": "^8.0.0",
+    "express": "^4.21.2",
+    "mongoose": "^8.12.1",
+    "multer": "^1.4.5-lts.1",
+    "redis": "^4.7.0",
+    "sharp": "^0.33.5",
+    "uuid": "^11.1.0",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.14",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.13.8",
+    "@types/supertest": "^6.0.2",
+    "@types/uuid": "^10.0.0",
+    "jest": "^29.7.0",
+    "mongodb-memory-server": "^10.1.4",
+    "nodemon": "^3.1.9",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}

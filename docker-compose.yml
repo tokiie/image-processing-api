@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  image-processing-api:
+    build: .
+    ports:
+      - "${PORT:-3000}:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - MONGO_URI=mongodb://mongo:27017/${MONGO_DB_NAME:-image-processing}
+      - REDIS_HOST=redis
+      - REDIS_URL=redis://redis:${REDIS_PORT:-6379}
+      - BASE_URL=${BASE_URL:-http://localhost:3000}
+    volumes:
+      - ${UPLOADS_DIR:-./uploads}:/app/uploads
+      - ${TEMP_DIR:-./temp}:/app/temp
+      - ${LOG_DIR:-./logs}:/app/logs
+      - ./src:/app/src
+    command: yarn dev
+    depends_on:
+      - mongo
+      - redis
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    command: redis-server --appendonly yes --save 60 1 --loglevel warning
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+  mongo:
+    image: mongo:5.0
+    restart: unless-stopped
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME:-image-processing}
+    volumes:
+      - mongodb-data:/data/db
+      - mongodb-config:/data/configdb
+
+volumes:
+  redis-data:
+    name: image-processing-redis-data
+  mongodb-data:
+    name: image-processing-mongodb-data
+  mongodb-config:
+    name: image-processing-mongodb-config

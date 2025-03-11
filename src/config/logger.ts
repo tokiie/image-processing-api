@@ -1,8 +1,9 @@
 import winston from 'winston';
+import { env } from './env.config';
 
 const logger = winston.createLogger({
-  silent: process.env.NODE_ENV === 'test',
-  level: process.env.LOG_LEVEL || 'info',
+  silent: env.NODE_ENV === 'test',
+  level: env.LOG_LEVEL || 'info',
   format: winston.format.combine(
     winston.format.timestamp({ format: 'YYYY-MM-DD hh:mm:ss A' }),
     winston.format.errors({ stack: true }),
@@ -20,13 +21,13 @@ const logger = winston.createLogger({
       )
     }),
     new winston.transports.File({
-      filename: 'logs/error.log',
+      filename: env.LOG_ERROR_FILE,
       level: 'error',
       maxsize: 5242880, // 5MB
       maxFiles: 5,
     }),
     new winston.transports.File({
-      filename: 'logs/combined.log',
+      filename: env.LOG_COMBINED_FILE,
       maxsize: 5242880, // 5MB
       maxFiles: 5,
     })
@@ -34,7 +35,7 @@ const logger = winston.createLogger({
 });
 
 // If we're not in production, log to the console with colors
-if (process.env.NODE_ENV !== 'production') {
+if (env.NODE_ENV !== 'production') {
   logger.add(new winston.transports.Console({
     format: winston.format.combine(
       winston.format.colorize(),

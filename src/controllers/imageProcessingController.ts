@@ -2,9 +2,10 @@ import { Request, Response } from 'express';
 import { ImageProcessingService } from '../services/ImageProcessingService';
 import { QueueServiceWrapper } from '../services/QueueService';
 import ImageJobModel from '../models/ImageJob';
-import { JobStatus, ImageJobType, ImageProcessingJobData, PaginationOptions, PaginatedResponse } from '../types';
+import { JobStatus, ImageJobType, ImageProcessingJobData } from '../types';
 import mongoose from 'mongoose';
 import { logger } from '../config/logger';
+import { env } from '../config/env.config';
 
 export class ImageProcessingController {
   private queueServiceInstance: QueueServiceWrapper;
@@ -86,7 +87,7 @@ export class ImageProcessingController {
   private async queueImageProcessingJob(imageJob: any) {
     logger.debug('Adding job to queue', {
       jobId: imageJob._id,
-      queueName: 'image-processing',
+      queueName: env.QUEUE_NAME,
       jobType: 'thumbnail'
     });
 

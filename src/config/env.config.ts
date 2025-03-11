@@ -1,4 +1,7 @@
+import dotenv from 'dotenv';
 import { cleanEnv, str, port, num, bool, url } from 'envalid';
+
+dotenv.config();
 
 export function validateEnv() {
   return cleanEnv(process.env, {
@@ -20,16 +23,15 @@ export function validateEnv() {
 
     // File Upload Configuration
     MAX_FILE_SIZE: num({ default: 10485760 }), // 10MB in bytes
-    ALLOWED_MIME_TYPES: str({ default: 'image/jpeg,image/png,image/gif,image/webp,image/bmp,image/tiff' }),
     SUPPORTED_IMAGE_FORMATS: str({ default: 'jpeg,jpg,png,gif,webp,bmp,tiff' }),
 
     // Thumbnail Configuration
     THUMBNAIL_WIDTH: num({ default: 100 }),
     THUMBNAIL_HEIGHT: num({ default: 100 }),
-    THUMBNAIL_MEDIUM_WIDTH: num({ default: 300 }),
-    THUMBNAIL_MEDIUM_HEIGHT: num({ default: 300 }),
-    THUMBNAIL_LARGE_WIDTH: num({ default: 600 }),
-    THUMBNAIL_LARGE_HEIGHT: num({ default: 600 }),
+    // THUMBNAIL_MEDIUM_WIDTH: num({ default: 300 }),
+    // THUMBNAIL_MEDIUM_HEIGHT: num({ default: 300 }),
+    // THUMBNAIL_LARGE_WIDTH: num({ default: 600 }),
+    // THUMBNAIL_LARGE_HEIGHT: num({ default: 600 }),
 
     // Worker Configuration
     WORKER_CONCURRENCY: num({ default: 5 }),

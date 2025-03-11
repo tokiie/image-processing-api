@@ -1,3 +1,5 @@
+import { env } from "../config/env.config";
+
 // Job Status and Types
 export enum JobStatus {
     PROCESSING = 'processing',
@@ -42,8 +44,8 @@ export class ImageProcessingParams {
 
         // Set default options if not provided
         this.options = {
-            width: options?.width || parseInt(process.env.THUMBNAIL_WIDTH || '100'),
-            height: options?.height || parseInt(process.env.THUMBNAIL_HEIGHT || '100'),
+            width: options?.width || env.THUMBNAIL_WIDTH || 100,
+            height: options?.height || env.THUMBNAIL_HEIGHT || 100,
             quality: options?.quality || 80,
             format: options?.format || 'jpeg',
             ...options
@@ -99,28 +101,4 @@ export interface QueueJobOptions {
     delay?: number;
     jobId?: string;
     priority?: number;
-}
-
-// File Types
-export interface FileUploadOptions {
-    maxSize?: number;
-    allowedMimeTypes?: string[];
-    supportedFormats?: string[];
-}
-// Pagination Types
-export interface PaginationOptions {
-    page?: number;
-    limit?: number;
-    sort?: string;
-    order?: 'asc' | 'desc';
-}
-
-export interface PaginatedResponse<T> {
-    data: T[];
-    pagination: {
-        page: number;
-        limit: number;
-        total: number;
-        pages: number;
-    };
 }

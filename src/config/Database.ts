@@ -1,10 +1,9 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import { logger } from './logger';
+import { env } from './env.config';
 
-dotenv.config();
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/myapp';
+const MONGO_URI = env.MONGO_URI || 'mongodb://localhost:27017/myapp';
 
 class Database {
   private static instance: Database;

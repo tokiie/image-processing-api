@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 });
 
 const allowedExtensions = new RegExp(
-  process.env.SUPPORTED_IMAGE_FORMATS?.split(',')
+  env.SUPPORTED_IMAGE_FORMATS?.split(',')
     .map(ext => ext.trim())
     .join('|') || 'jpeg|jpg|png|gif|webp|bmp|tiff',
   'i'
@@ -44,14 +44,14 @@ const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCa
     return cb(null, true);
   }
 
-  cb(new Error(`Invalid file format: ${file.mimetype}. Allowed formats: ${process.env.SUPPORTED_IMAGE_FORMATS || 'jpeg, jpg, png, gif, webp, bmp, tiff'}.`));
+  cb(new Error(`Invalid file format: ${file.mimetype}. Allowed formats: ${env.SUPPORTED_IMAGE_FORMATS || 'jpeg, jpg, png, gif, webp, bmp, tiff'}.`));
 };
 
 export const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: parseInt(process.env.MAX_FILE_SIZE || '10485760') // Default to 10MB if not set
+    fileSize: env.MAX_FILE_SIZE // Default to 10MB if not set
   }
 });
 
